@@ -73,6 +73,8 @@ Install [chainer](http://chainer.org/) with CUDNN and HDF5: [installation instru
 
 Install [GrouPy](https://github.com/tscohen/GrouPy)
 
+Add the gconv_experiments folder to your PYTHONPATH.
+
 ## Download data
 
 ### CIFAR10
@@ -81,10 +83,32 @@ Install [GrouPy](https://github.com/tscohen/GrouPy)
 $ cd [datadir]
 $ wget http://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
 $ tar zxvf cifar-10-python.tar.gz
-$ rm -rf cifar-10-python.tar.gz
+$ rm cifar-10-python.tar.gz
+```
+
+### MNIST-rot
+
+```
+$ cd [datadir]
+$ wget http://www.iro.umontreal.ca/~lisa/icml2007data/mnist_rotation_back_image_new.zip
+$ unzip mnist_rotation_new.zip 
+$ rm mnist_rotation_new.zip
+$ ipython /path/to/gconv_experiments/gconv_experiments/MNIST_ROT/mnist_rot.py -- --datadir=./
 ```
 
 ## Train a G-CNN
+
+### MNIST-rot
+
+To run the MNIST-rot experiments:
+
+```
+$ ipython MNIST_ROT/experiment.py -- --trainfn=[datadir]/train_all.npz --valfn=[datadir]/test.npz
+```
+
+You can also call train.py directly to train a single model.
+
+### CIFAR10
 
 The first time you run an experiment, the code will preprocess the dataset and leave a preprocessed copy in \[datadir\].
 

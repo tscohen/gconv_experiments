@@ -137,26 +137,15 @@ def testplot_p4m(im=None, m=0, r=0):
                          [-2., 0., 2.],
                          [-1., 0., 1.]])
 
-    filter_r1 = rotate_flip_z2_func(filter_e, flip=0, theta_index=1)
-    filter_r2 = rotate_flip_z2_func(filter_e, flip=0, theta_index=2)
-    filter_r3 = rotate_flip_z2_func(filter_e, flip=0, theta_index=3)
-
-    filter_m = rotate_flip_z2_func(filter_e, flip=1, theta_index=0)
-    filter_mr1 = rotate_flip_z2_func(filter_e, flip=1, theta_index=1)
-    filter_mr2 = rotate_flip_z2_func(filter_e, flip=1, theta_index=2)
-    filter_mr3 = rotate_flip_z2_func(filter_e, flip=1, theta_index=3)
-
-    from chainer.functions import Convolution2D
+    from groupy.gconv.chainer_gconv.p4m_conv import P4MConvZ2
     from chainer import Variable
-    im = im.astype(np.float32)
-    ksize = filter_e.shape[0]
-    imf_e = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2,initialW=filter_e)(Variable(im[None, None])).data[0, 0]
-    imf_r1 = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2, initialW=filter_r1)(Variable(im[None, None])).data[0, 0]
-    imf_r2 = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2, initialW=filter_r2)(Variable(im[None, None])).data[0, 0]
-    imf_r3 = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2, initialW=filter_r3)(Variable(im[None, None])).data[0, 0]
-    imf_m = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2, initialW=filter_m)(Variable(im[None, None])).data[0, 0]
-    imf_mr1 = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2, initialW=filter_mr1)(Variable(im[None, None])).data[0, 0]
-    imf_mr2 = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2, initialW=filter_mr2)(Variable(im[None, None])).data[0, 0]
-    imf_mr3 = Convolution2D(in_channels=1, out_channels=1, ksize=ksize, bias=0., pad=2, initialW=filter_mr3)(Variable(im[None, None])).data[0, 0]
+    from chainer import cuda
 
-    return im, np.r_[[imf_e, imf_r1, imf_r2, imf_r3, imf_m, imf_mr1, imf_mr2, imf_mr3]]
+    print im.shape
+
+    imv = Variable(cuda.to_gpu(im.astype('float32').reshape(1, 1, 5, 5)))
+    conv = P4MConvZ2(in_channels=1, out_channels=1, ksize=3, pad=2, flat_channels=True, initialW=filter_e.reshape(1, 1, 1, 3, 3))
+    conv.to_gpu()
+    conv_imv = conv(imv)
+    print im.shape, conv_imv.data.shape
+    return im, cuda.to_cpu(conv_imv.data)
