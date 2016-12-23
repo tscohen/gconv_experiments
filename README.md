@@ -90,7 +90,7 @@ $ rm cifar-10-python.tar.gz
 
 ```
 $ cd [datadir]
-$ wget http://www.iro.umontreal.ca/~lisa/icml2007data/mnist_rotation_back_image_new.zip
+$ wget http://www.iro.umontreal.ca/~lisa/icml2007data/mnist_rotation_new.zip
 $ unzip mnist_rotation_new.zip 
 $ rm mnist_rotation_new.zip
 $ ipython /path/to/gconv_experiments/gconv_experiments/MNIST_ROT/mnist_rot.py -- --datadir=./
