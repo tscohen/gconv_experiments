@@ -1,6 +1,7 @@
 
 from chainer import Chain
 import chainer.functions as F
+import chainer.links as L
 
 
 class ConvBNAct(Chain):
@@ -13,7 +14,7 @@ class ConvBNAct(Chain):
 
         if bn:
             out_channels = self.conv.W.data.shape[0]
-            self.add_link('bn', F.BatchNormalization(out_channels))
+            self.add_link('bn', L.BatchNormalization(out_channels))
         else:
             self.bn = None
 
@@ -24,7 +25,7 @@ class ConvBNAct(Chain):
         y = self.conv(x)
 
         if self.bn:
-            y = self.bn(y, test=not train, finetune=finetune)
+            y = self.bn(y, finetune=finetune)
         if self.act:
             y = self.act(y)
 

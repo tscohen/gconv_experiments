@@ -80,7 +80,7 @@ def preprocess_mnist_data(train_data, test_data, train_labels, test_labels):
 def train_epoch(train_data, train_labels, model, optimizer, batchsize, transformations, silent, gpu=0, finetune=False):
 
     N = train_data.shape[0]
-    pbar = ProgressBar(0, N)
+    pbar = ProgressBar(maxval=N).start()
     perm = np.random.permutation(N)
     sum_accuracy = 0
     sum_loss = 0
@@ -114,12 +114,13 @@ def train_epoch(train_data, train_labels, model, optimizer, batchsize, transform
         if not silent:
             pbar.update(i + y_batch.size)
 
+    pbar.finish()
     return sum_loss, sum_accuracy
 
 
 def validate(test_data, test_labels, model, batchsize, silent, gpu):
     N_test = test_data.shape[0]
-    pbar = ProgressBar(0, N_test)
+    pbar = ProgressBar(maxval=N_test).start()
     sum_accuracy = 0
     sum_loss = 0
 
