@@ -100,7 +100,7 @@ def train_epoch(train_data, train_labels, model, optimizer, batchsize, transform
             x_batch = cuda.to_gpu(x_batch.astype(np.float32))
             y_batch = cuda.to_gpu(y_batch.astype(np.int32))
 
-        optimizer.zero_grads()
+        model.cleargrads()
         x = Variable(x_batch)
         t = Variable(y_batch)
 
